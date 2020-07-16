@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import './categories_screen.dart';
+import './screens/category_meals_screen.dart';
+import './screens/meal_detail_screen.dart';
+import './screens/categories_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +32,28 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
             )),
       ),
-      home: CategoriesScreen(),
+      //home: CategoriesScreen(),
+      initialRoute: '/', //default is '/'
+      routes: {
+        '/': (ctx) => CategoriesScreen(),
+        CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
+        MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
+      },
+      //Load the CategoriesScreen page for any initiateed route
+      //that is not registered on the routes array.
+      // onGenerateRoute: (settings) {
+      //   print(settings.arguments);
+      //   return MaterialPageRoute(builder: (ctx) => CategoriesScreen());
+      // },
+      // //Is reached when flutter fails to build a screen with all other methods.
+      //Or when you don't define routes and don't use onGeneratedRoute.
+      //So as the last resource before the runtime error, flutter tries to use
+      //this method to show something on the screen.
+      onUnknownRoute: (settings) {
+        print('Unknown Route');
+        print(settings);
+        return MaterialPageRoute(builder: (ctx) => CategoriesScreen());
+      },
     );
   }
 }
