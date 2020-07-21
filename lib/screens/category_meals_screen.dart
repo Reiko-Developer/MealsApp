@@ -2,45 +2,83 @@ import 'package:flutter/material.dart';
 
 import '../widgets/meal_item.dart';
 
+import '../models/meal.dart';
+
 import '../dummy_data.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
-  // final String categoryId;
+class CategoryMealsScreen extends StatefulWidget {
+  // final String _categoryId;
   // final String categoryTitle;
 
-  // CategoryMealsScreen(this.categoryId, this.categoryTitle);
+  // CategoryMealsScreen(this._categoryId, this.categoryTitle);
 
-  static const routeName = '/category-meals'; //pageName or screenName..
+  static const routeName = '/category-meals';
+  @override
+  _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
+}
+
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  String _categoryTitle;
+  String _categoryId;
+  List<Meal> _displayedMeals;
+  bool _loadedInitData = false;
+
+  @override
+  void initState() {
+    //any of the context stuff we need to do in here will unfortunately
+    //not work but in didChangeDependencies, it should work.
+    super.initState();
+  }
+
+  //another lifecycle hook
+  @override
+  void didChangeDependencies() {
+    //is triggered essentialy whenever the references of the state changes,
+    //wich also means it will be called when the widget that belongs to
+    //the state has been fully initialized and now we can tap into the context.
+    //context is not available on the initState
+    //modal route - on the initState-, is called before the context is setted.
+    if (!_loadedInitData) {
+      final routeArgs =
+          ModalRoute.of(context).settings.arguments as Map<String, String>;
+
+      _categoryId = routeArgs['id'];
+      _categoryTitle = routeArgs['title'];
+
+      _displayedMeals = DUMMY_MEALS
+          .where((meal) => meal.categories.contains(_categoryId))
+          .toList();
+      _loadedInitData = true;
+    }
+    super.didChangeDependencies();
+  }
+
+  void _removeMeal(String mealId) {
+    setState(() {
+      _displayedMeals.removeWhere((meal) => meal.id == mealId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routeArgs =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
-
-    final categoryId = routeArgs['id'];
-    final categoryTitle = routeArgs['title'];
-
-    final categoryMeals = DUMMY_MEALS
-        .where((meal) => meal.categories.contains(categoryId))
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryTitle),
+        title: Text(_categoryTitle),
       ),
       body: ListView.builder(
         itemBuilder: (ctx, index) {
-          //return Text(categoryMeals[index].title);
+          //return Text(_displayedMeals[index].title);
           return MealItem(
-            id: categoryMeals[index].id,
-            affordability: categoryMeals[index].affordability,
-            duration: categoryMeals[index].duration,
-            complexity: categoryMeals[index].complexity,
-            imageUrl: categoryMeals[index].imageUrl,
-            title: categoryMeals[index].title,
+            id: _displayedMeals[index].id,
+            affordability: _displayedMeals[index].affordability,
+            duration: _displayedMeals[index].duration,
+            complexity: _displayedMeals[index].complexity,
+            imageUrl: _displayedMeals[index].imageUrl,
+            title: _displayedMeals[index].title,
+            removeItem: _removeMeal,
           );
         },
-        itemCount: categoryMeals.length,
+        itemCount: _displayedMeals.length,
       ),
     );
   }
