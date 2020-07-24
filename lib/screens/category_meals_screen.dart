@@ -4,15 +4,12 @@ import '../widgets/meal_item.dart';
 
 import '../models/meal.dart';
 
-import '../dummy_data.dart';
-
 class CategoryMealsScreen extends StatefulWidget {
-  // final String _categoryId;
-  // final String categoryTitle;
-
-  // CategoryMealsScreen(this._categoryId, this.categoryTitle);
-
   static const routeName = '/category-meals';
+
+  final List<Meal> availableMeals;
+  CategoryMealsScreen(this.availableMeals);
+
   @override
   _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
 }
@@ -45,7 +42,7 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
       _categoryId = routeArgs['id'];
       _categoryTitle = routeArgs['title'];
 
-      _displayedMeals = DUMMY_MEALS
+      _displayedMeals = widget.availableMeals
           .where((meal) => meal.categories.contains(_categoryId))
           .toList();
       _loadedInitData = true;
@@ -53,11 +50,11 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
     super.didChangeDependencies();
   }
 
-  void _removeMeal(String mealId) {
-    setState(() {
-      _displayedMeals.removeWhere((meal) => meal.id == mealId);
-    });
-  }
+  // void _removeMeal(String mealId) {
+  //   setState(() {
+  //     _displayedMeals.removeWhere((meal) => meal.id == mealId);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +72,6 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
             complexity: _displayedMeals[index].complexity,
             imageUrl: _displayedMeals[index].imageUrl,
             title: _displayedMeals[index].title,
-            removeItem: _removeMeal,
           );
         },
         itemCount: _displayedMeals.length,
