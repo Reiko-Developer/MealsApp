@@ -1,6 +1,6 @@
-import 'package:MealsApp/screens/meal_detail_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/meal_detail_screen.dart';
 import '../models/meal.dart';
 
 class MealItem extends StatelessWidget {
@@ -10,16 +10,14 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
-  // final Function removeItem;
 
   MealItem({
     @required this.id,
     @required this.title,
+    @required this.imageUrl,
     @required this.affordability,
     @required this.complexity,
     @required this.duration,
-    @required this.imageUrl,
-    // @required this.removeItem,
   });
 
   String get complexityText {
@@ -34,7 +32,7 @@ class MealItem extends StatelessWidget {
         return 'Hard';
         break;
       default:
-        return 'Unknown!';
+        return 'Unknown';
     }
   }
 
@@ -43,37 +41,34 @@ class MealItem extends StatelessWidget {
       case Affordability.Affordable:
         return 'Affordable';
         break;
-      case Affordability.Luxurious:
-        return 'Luxurious';
-        break;
       case Affordability.Pricey:
         return 'Pricey';
+        break;
+      case Affordability.Luxurious:
+        return 'Expensive';
         break;
       default:
         return 'Unknown';
     }
   }
 
-  void selectMeal(BuildContext ctx) {
-    Navigator.of(ctx)
+  void selectMeal(BuildContext context) {
+    Navigator.of(context)
         .pushNamed(
       MealDetailScreen.routeName,
       arguments: id,
     )
         .then((result) {
       if (result != null) {
-        //removeItem(id);
-      } else
-        print('nulo');
+        // removeItem(result);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        selectMeal(context);
-      },
+      onTap: () => selectMeal(context),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -102,10 +97,16 @@ class MealItem extends StatelessWidget {
                   child: Container(
                     width: 300,
                     color: Colors.black54,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 20,
+                    ),
                     child: Text(
                       title,
-                      style: TextStyle(fontSize: 26, color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: Colors.white,
+                      ),
                       softWrap: true,
                       overflow: TextOverflow.fade,
                     ),
@@ -120,16 +121,20 @@ class MealItem extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Icon(Icons.schedule),
+                      Icon(
+                        Icons.schedule,
+                      ),
                       SizedBox(
                         width: 6,
                       ),
-                      Text("$duration min"),
+                      Text('$duration min'),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      Icon(Icons.work),
+                      Icon(
+                        Icons.work,
+                      ),
                       SizedBox(
                         width: 6,
                       ),
@@ -138,11 +143,15 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: <Widget>[
-                      Icon(Icons.attach_money),
-                      SizedBox(width: 6),
-                      Text(affordabilityText)
+                      Icon(
+                        Icons.attach_money,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text(affordabilityText),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
 
-import '../models/meal.dart';
-
+import '../widgets/main_drawer.dart';
 import './favorites_screen.dart';
 import './categories_screen.dart';
-import '../widgets/main_drawer.dart';
+import '../models/meal.dart';
 
-class TabScreen extends StatefulWidget {
+class TabsScreen extends StatefulWidget {
   final List<Meal> favoriteMeals;
 
-  TabScreen(this.favoriteMeals);
+  TabsScreen(this.favoriteMeals);
 
   @override
-  _TabScreenState createState() => _TabScreenState();
+  _TabsScreenState createState() => _TabsScreenState();
 }
 
-class _TabScreenState extends State<TabScreen> {
+class _TabsScreenState extends State<TabsScreen> {
   List<Map<String, Object>> _pages;
-
   int _selectedPageIndex = 0;
 
-  //it's not posible to refer properties when inside the properties scope.
-  //_selectedPageIndex = _pages; //this gives an error.
-
   @override
-  initState() {
-    super.initState();
+  void initState() {
     _pages = [
-      {'page': CategoriesScreen(), 'title': 'Categories'},
-      {'page': FavoritesScreen(widget.favoriteMeals), 'title': 'Your Favorite'},
+      {
+        'page': CategoriesScreen(),
+        'title': 'Categories',
+      },
+      {
+        'page': FavoritesScreen(widget.favoriteMeals),
+        'title': 'Your Favorite',
+      },
     ];
+    super.initState();
   }
 
   void _selectPage(int index) {
@@ -52,10 +53,7 @@ class _TabScreenState extends State<TabScreen> {
         unselectedItemColor: Colors.white,
         selectedItemColor: Theme.of(context).accentColor,
         currentIndex: _selectedPageIndex,
-        unselectedFontSize: 12,
-        //standard is fixed.
-        //type: BottomNavigationBarType.fixed,
-        type: BottomNavigationBarType.shifting,
+        // type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
@@ -66,7 +64,7 @@ class _TabScreenState extends State<TabScreen> {
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.star),
             title: Text('Favorites'),
-          )
+          ),
         ],
       ),
     );
